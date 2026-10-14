@@ -2,6 +2,11 @@
 
 A fast, private, and modern web application to clean, format, de-duplicate, and convert bulk telephone numbers into standardized `.vcf` (vCard 3.0) contact files ready for import into iOS, Android, Google Contacts, and Outlook.
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-num2vcf.vercel.app-10b981?style=for-the-badge&logo=vercel)](https://num2vcf.vercel.app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
+
+🔗 **Live Website**: [https://num2vcf.vercel.app](https://num2vcf.vercel.app)
+
 ---
 
 ## Features
@@ -15,7 +20,7 @@ A fast, private, and modern web application to clean, format, de-duplicate, and 
 - 📇 **RFC 2426 vCard 3.0 CRLF Compliance**: Generates strict, standards-compliant vCard 3.0 cards with CRLF (`\r\n`) line endings and proper delimiter escaping (`\`, `,`, `;`) for universal import compatibility.
 - 🔄 **Intelligent De-duplication & Validation**: Real-time detection flags and drops duplicate numbers after formatting, filtering out entries that fail international length criteria (9–15 digits).
 - 🏷️ **Customizable Contact Naming**:
-  - Configurable name prefixes (e.g., `Lead`, `Client`, `Batch 2026`).
+  - Configurable name prefixes (e.g., `Lead`, `Client`, `Batch 2026`, or simple numeric tags like `1`).
   - Sequential counters with customizable starting index, separator (`_`, `-`, space), and zero-padding (`01`, `001`, `0001`).
 - 📊 **Real-Time Preview & Metrics**: Live summary counters (total lines, valid numbers, invalid entries, duplicates dropped), paginated preview table, and raw `.vcf` output inspector.
 - 📁 **Export & Clipboard**: Instant one-click `.vcf` download with timestamped filenames, or direct copy to clipboard.
@@ -45,48 +50,41 @@ A fast, private, and modern web application to clean, format, de-duplicate, and 
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/your-username/phone-to-vcf.git
-cd phone-to-vcf
+git clone [https://github.com/manuthlochana/num2vcf.git](https://github.com/manuthlochana/num2vcf.git)
+cd num2vcf
 npm install
-```
 
-### Development Server
+
+Development Server
 
 Start the local development server:
 
-```bash
 npm run dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) (or the port shown in your terminal) in your browser.
 
-### Running Tests
+Open http://localhost:3000 (or the port shown in your terminal) in your browser.
+
+Running Tests
 
 Execute the unit test suite:
 
-```bash
 npm test
-```
 
-### Production Build
+
+Production Build
 
 Build the optimized application bundle:
 
-```bash
 npm run build
-```
+
 
 Preview the production build locally:
 
-```bash
 npm run preview
-```
 
----
 
-## Project Structure
+Project Structure
 
-```
 ├── public/                # Static assets, favicon, and app icons
 │   ├── favicon.ico
 │   ├── favicon.png
@@ -103,10 +101,13 @@ npm run preview
 │   ├── styles.css         # Global design tokens and Tailwind theme
 │   └── router.tsx         # Router configuration
 └── vitest.config.ts       # Test runner configuration
-```
 
----
 
-## License
+Live Demo
 
-This project is licensed under the [MIT License](LICENSE).
+Try the live application directly in your browser:
+👉 https://num2vcf.vercel.app
+
+License
+
+This project is licensed under the MIT License.
