@@ -82,16 +82,52 @@ function Index() {
     if (f) readFile(f);
   };
 
-  const download = () => {
-    const blob = new Blob([vcf], { type: "text/vcard;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+  const download = async () => {
     const safe = (prefix.trim() || "contacts").replace(/[^\w-]+/g, "_");
-    a.href = url;
-    a.download = `contacts_${safe}_${new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19)}.vcf`;
-    a.click();
-    URL.revokeObjectURL(url);
-    toast.success(`Downloaded ${stats.valid.toLocaleString()} contacts`);
+    const filename = `contacts_${safe}_${new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19)}.vcf`;
+
+    // 1. Native Web Share API as Primary on Mobile (iOS / iPadOS WebKit)
+    // Allows sharing directly to WhatsApp, Messages, AirDrop, or "Save to Files"
+    if (
+      typeof navigator !== "undefined" &&
+      typeof navigator.share === "function" &&
+      typeof navigator.canShare === "function"
+    ) {
+      try {
+        const file = new File([vcf], filename, { type: "text/vcard;charset=utf-8" });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: filename });
+          toast.success(`Exported ${stats.valid.toLocaleString()} contacts`);
+          return;
+        }
+      } catch (error: unknown) {
+        if (error instanceof Error && error.name === "AbortError") {
+          // User dismissed the native share sheet without picking an app.
+          // Proceed to fallback binary download without showing an error toast.
+        } else {
+          console.warn("Web Share failed, proceeding with binary download fallback:", error);
+        }
+      }
+    }
+
+    // 2. Robust Fallback (Desktop / Non-WebShare browsers / Share sheet cancelled)
+    // Force a binary download via a hidden <a> tag with application/octet-stream
+    // to prevent Mobile Safari / WebKit from intercepting the file into CNContactViewController.
+    try {
+      const blob = new Blob([vcf], { type: "application/octet-stream" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success(`Downloaded ${stats.valid.toLocaleString()} contacts`);
+    } catch (error) {
+      console.error("Binary download failed:", error);
+      toast.error("Failed to download contacts file");
+    }
   };
   const copy = async () => {
     await navigator.clipboard.writeText(vcf);
